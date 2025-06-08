@@ -32,8 +32,14 @@ void main(void)
   vec3 l = normalize((pl * p.w - p * pl.w).xyz);    // 光線ベクトル
   vec3 n = normalize((mg * cv).xyz);                // 法線ベクトル
 
+  vec3 h = normalize(l + v);  // lとvの中間
+
   //【宿題】下の１行（の右辺）を置き換えてください
-  vc = cv;
+  vec4 iamb = kamb * lamb;  // 環境光成分
+  vec4 idiff = max(dot(n, l), 0) * kdiff * ldiff;  // 拡散反射成分
+  vec4 ispec = pow(max(dot(n, h), 0), kshi) * kspec * lspec;  // 鏡面反射成分
+  
+  vc = iamb + idiff + ispec;       
 
   gl_Position = mc * pv;
 }
